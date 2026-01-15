@@ -1,0 +1,23 @@
+# Hardware
+
+This document describes the physical hardware used to build and run my home lab.
+
+## Host System
+- Device type: Desktop 
+- CPU:  Intel(R) Core(TM) i7-6700
+- RAM:  32.0 GB
+- Storage: 500 GB SSD
+- Network: Integrated Ethernet 
+
+## Role in the Lab
+The host system runs Oracle VirtualBox, which is used to host two Windows machines and two Linux
+virtual machines that provide lab services.
+
+## Design Considerations
+- Hardware already available (no dedicated server hardware)
+- Sufficient RAM to support all four VMs
+- SSD storage for improved VM performance
+
+## Future Improvements
+- Increase RAM to support additional virtual machines
+- Move to dedicated hardware for 24/7 uptime
