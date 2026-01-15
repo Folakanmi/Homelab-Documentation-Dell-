@@ -1,0 +1,12 @@
+# Troubleshooting
+
+This document tracks common issues encountered while building and running the home lab.
+
+**Cause:**
+
+**Fix:**
+
+## Lessons Learned
+- Start with minimal resource usage
+- Document changes before making them
+- Test one change at a time
