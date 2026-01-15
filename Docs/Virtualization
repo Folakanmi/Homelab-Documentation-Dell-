@@ -1,0 +1,116 @@
+# Virtualization
+
+This document describes how virtualization is implemented in the home lab.
+
+## Hypervisor
+- Software: Oracle VirtualBox
+- Host OS: Windows
+- Virtualization type: Type 2 hypervisor
+
+
+## Virtual Machine 1
+## WS 2022-DC01
+- Guest OS: Windows Server 2022 (64-bit)
+- VM purpose:
+  - Application hosting
+  - Service isolation
+  - SIEM / log analysis
+- Resource Allocation:
+  - CPUs: 2
+  - Memory: 2 GB
+  - Storage: 50 GB VDI (dynamically allocated)
+- Why VirtualBox:
+  - Easy to use for learning
+  - Cross-platform support
+  - Suitable for desktop-based home lab
+  - Adequate for server tasks and SIEM
+- Limitations:
+  - Depends on host OS uptime
+  - Not designed for high availability
+  - Lower performance than bare-metal hypervisors
+
+
+## Virtual Machine 2
+## UBU-SIEM01
+- Guest OS: Ubuntu Server 24.04.3
+- Host name: UBU-SIEM01
+- VM purpose:
+- Application hosting
+- Service isolation
+- SIEM
+
+## Resource Allocation
+- CPUs: 1 VM
+- Memory: 2 VM
+- Storage: 25GB (VDI) 
+
+## Why VirtualBox
+- Easy to use for learning
+- Cross-platform support
+- Suitable for a desktop-based home lab
+- Adequate for SIEM and log analysis
+
+## Limitations
+- Depends on host OS uptime
+- Not designed for high availability
+- Lower performance than bare-metal hypervisors
+
+### Kali Linux (64-bit)
+- Guest OS: Kali Linux (64-bit)
+- VM purpose:
+  - Penetration testing
+  - Security experiments
+  - Network scanning and monitoring
+- Resource Allocation:
+  - CPUs: 2
+  - Memory: 2 GB
+  - Storage: 20 GB VDI (dynamically allocated)
+- Why VirtualBox:
+  - Lightweight Linux distribution
+  - Ideal for testing without affecting host OS
+  - Easy snapshotting for experiments
+- Limitations:
+  - Requires careful network configuration for lab isolation
+  - Performance depends on host resources
+  - Not intended for production workloads
+
+
+## Virtual Machine 3
+## Kali-Red01
+- Guest OS: Red Hat Enterprise Linux (64-bit)
+- VM purpose:
+  - Linux server testing
+  - Learning enterprise Linux commands and administration
+  - Service hosting (web server, database)
+- Resource Allocation:
+  - CPUs: 2
+  - Memory: 2 GB
+  - Storage: 20 GB VDI (dynamically allocated)
+- Why VirtualBox:
+  - Cross-platform virtualization for Linux
+  - Supports enterprise-level features for testing
+  - Snapshots allow safe experimentation
+- Limitations:
+  - Host performance affects VM speed
+  - Enterprise features may require subscription
+  - Not designed for high availability
+
+
+## Virtual Machine 4
+## WIN11-Clint01 (64-bit)
+- Guest OS: Windows 11 (64-bit)
+- VM purpose:
+  - General-purpose workstation
+  - Testing software in isolated environment
+  - Learning Windows features and settings
+- Resource Allocation:
+  - CPUs: 2
+  - Memory: 4 GB
+  - Storage: 30 GB VDI (dynamically allocated)
+- Why VirtualBox:
+  - Familiar Windows environment for testing
+  - Allows safe experimentation without affecting host OS
+- Limitations:
+  - Higher RAM requirement than lightweight VMs
+  - Performance depends on host resources
+  - Not intended for production workloads
