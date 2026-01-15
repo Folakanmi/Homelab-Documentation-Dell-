@@ -1,0 +1,45 @@
+# Network
+
+This document outlines the network configuration used in the home lab.
+
+## Network Layout
+- Host machine connected to home router
+- VirtualBox provides virtual networking to guest VMs
+- pfSense VM used as a virtual firewall/router
+- Two main virtual networks:
+  1. NAT (for internet access via pfSense)
+  2. Host-Only network (for internal VM communication)
+
+## VirtualBox Networking Mode
+- NAT Network (through pfSense):
+  - Purpose: Provides internet access to VMs securely via pfSense firewall
+  - Allows controlled port forwarding
+  - Used for external connectivity while keeping VMs isolated from the host network
+
+- Host-Only Network:
+  - Purpose: Isolated network for VMs to communicate with each other and the host
+  - No direct internet access
+  - Useful for lab testing and service communication
+
+## IP Addressing
+- IP addresses assigned via pfSense DHCP for NAT network
+- IP addresses assigned via VirtualBox DHCP for Host-Only network
+- All IPs shown in documentation are sanitized
+
+Example (sanitized):
+- Host: 192.168.x.x
+- pfSense WAN (NAT): 192.168.x.x
+- pfSense LAN (Host-Only): 10.0.x.x
+- VM (Host-Only): 10.0.x.x
+
+## Connectivity
+- VMs can access the internet through the pfSense NAT
+- Host can access VMs on the Host-Only network
+- Internal services can communicate securely without exposing them to the host network
+- Port forwarding configured on pfSense for external service access
+
+## Future Improvements
+- Configure VLANs for service separation
+- Use static IPs for critical VMs
+- Add monitoring for network traffic
+- Expand host-only network for additional isolated segments
