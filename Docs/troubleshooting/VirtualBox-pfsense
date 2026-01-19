@@ -1,0 +1,28 @@
+## Troubleshooting
+
+### Issue: Netgate Installer ISO Cannot Be Selected in VM
+
+**Description**  
+During pfSense VM installation, the extracted Netgate installer appears as a folder instead of a bootable ISO and cannot be selected as installation media.
+
+**Affected File**  
+`netgate-installer-v1.1.1-RELEASE-amd64.iso.gz`
+
+**Environment**
+- Host OS: Windows 11
+- VM Platform: VirtualBox
+- pfSense Version: CE + Plus
+
+**Root Cause**  
+Windows 11's built-in "Extract All" treats `.iso.gz` as a compressed archive and extracts the internal ISO contents into a directory instead of producing an `.iso` file.
+
+**Resolution**
+1. Install **7-Zip** or another gzip-compatible extraction tool
+2. Right-click the `.iso.gz` file
+3. Select **7-Zip → Extract Here**
+4. Verify output file:
+5. Attach the `.iso` file to the VM as boot media
+
+**Verification**
+- VM boot menu loads Netgate installer
+- ISO is selectable in VM configuration
