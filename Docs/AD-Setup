@@ -1,0 +1,365 @@
+This repository documents the configuration and management of a home lab environment focused on core Microsoft infrastructure services.
+The lab is designed to provide hands-on experience with **Active Directory (AD), Domain Services, DNS, and DHCP** in a controlled Setup
+## 1. Server Preparation
+
+1. **Install Windows Server** on the VM (e.g., Windows Server 2022).  
+2. Assign a **static IP address**:
+   - Example: `192.168.x.xx`
+   - Subnet Mask: `255.255.255.0`
+   - Default Gateway: `192.168.x.xx`
+   - Preferred DNS: `192.168.x.xx` (self, for AD-integrated DNS)
+3. Update Windows Server with the latest patches.
+
+## 2. Install Active Directory Domain Services (AD DS)
+
+1. Open **Server Manager** → click **Add roles and features**.  
+2. Click **Next** through the wizard until **Server Roles**.  
+3. Select **Active Directory Domain Services**.  
+4. Click **Add Features** when prompted.  
+5. Continue to **Next**, then **Install**.  
+6. Wait for the installation to complete.
+
+
+# DNS Setup – Step-by-Step Documentation
+
+This document outlines the detailed configuration of the **Domain Name System (DNS)** service in a Windows Server home lab environment. 
+DNS is critical for name resolution, Active Directory integration, and network service accessibility.
+
+## 1. Install the DNS Role
+
+1. Open **Server Manager** → click **Add Roles and Features**.  
+2. Click **Next** through the wizard until **Server Roles**.  
+3. Select **DNS Server**.  
+4. Click **Add Features** if prompted.  
+5. Click **Next → Install**.  
+6. Wait for installation to complete.
+
+**Notes:**
+- If DNS is installed along with AD DS, this step is automatic.
+- Installation does **not start configuration** yet.
+
+
+## 2. Open DNS Manager
+
+1. In **Server Manager → Tools → DNS**.  
+2. The **DNS Manager console** opens, showing your server name.
+
+
+## 3. Configure Forward Lookup Zone
+
+1. Right-click **Forward Lookup Zones** → **New Zone**.  
+2. Click **Next** in the New Zone Wizard.  
+3. Select **Primary Zone** → click **Next**.  
+   - Store the zone in **Active Directory** if using a DC (recommended).  
+4. Choose **Replication Scope** (default: replicate to all DCs in the domain).  
+5. Enter the **zone name**:  
+6. Select **Allow only secure dynamic updates** (recommended for AD-integrated zones).  
+7. Click **Finish**.
+
+**Result:** Your domain now has a forward lookup zone for resolving hostnames to IP addresses.
+
+
+## 4. Configure Reverse Lookup Zone
+
+1. Right-click **Reverse Lookup Zones** → **New Zone**.  
+2. Select **Primary Zone** → click **Next**.  
+3. Choose **IPv4 Reverse Lookup Zone** → click **Next**.  
+4. Enter your **network ID** (e.g., for 192.168.x.x/24 → `192.168.x.xx`).  
+5. Allow secure dynamic updates if integrated with AD.  
+6. Click **Finish**.
+
+**Purpose:** Reverse lookup allows IP addresses to be resolved back to hostnames, useful for logging and troubleshooting.
+
+
+## 5. Verify Zone Records
+
+1. Expand the **Forward Lookup Zone → homelab.local**.  
+2. Check for automatically created records:
+- **NS (Name Server)** record pointing to your DC
+- **SOA (Start of Authority)** record
+- **A record** for the DC server itself
+
+3. Add manual **A records** if needed:
+- Right-click → **New Host (A or AAAA)**  
+- Example: `WEB01` → `192.168.x.xx`  
+
+
+## 6. Configure DNS Client Settings
+
+1. On all domain-joined machines (Windows or Ubuntu clients):  
+- Set **Preferred DNS server** to the DC’s IP (e.g., `192.168.x.xx`).  
+2. Test resolution:
+```powershell
+nslookup homelab.local
+nslookup <client hostname>
+
+
+# Dynamic Host Configuration Protocol (DHCP) Setup – Step-by-Step Documentation
+## 1. Install the DHCP Role
+
+1. Open **Server Manager → Add Roles and Features**.  
+2. Click **Next** through the wizard until **Server Roles**.  
+3. Select **DHCP Server** → click **Add Features** when prompted.  
+4. Continue → **Next → Install**.  
+5. Wait for installation to complete.  
+
+**Note:** If using AD DS, DHCP must be **authorized in the domain** before serving clients.
+
+
+## 2. Authorize the DHCP Server in Active Directory
+
+1. Open **DHCP Manager** (Server Manager → Tools → DHCP).  
+2. Right-click your server → **Authorize**.  
+3. Wait a few moments; the server icon will turn **green** indicating authorization.  
+
+**Purpose:** Prevents unauthorized DHCP servers on the network (important in domain environments).
+
+
+## 3. Create a New DHCP Scope
+
+A scope defines the IP addresses and options available to clients.  
+
+1. In **DHCP Manager → IPv4 → Right-click → New Scope**.  
+2. **New Scope Wizard Steps:**
+   - **Scope Name:** `Lab-Scope`  
+   - **Start IP Address:** `192.168.1.50`  
+   - **End IP Address:** `192.168.1.100`  
+   - **Subnet Mask:** `255.255.255.0`  
+   - **Default Gateway:** `192.168.1.1`  
+   - **DNS Server:** `192.168.1.10` (your DC)  
+   - **Lease Duration:** 8 hours (default)  
+3. Click **Finish** and **Activate** the scope.
+
+
+## 4. Configure DHCP Options (Optional)
+
+- **Additional Options** can be configured per scope:
+  - WINS Server
+  - Router (Gateway)
+  - DNS Domain Name (e.g., `lab.local`)  
+- Right-click the scope → **Scope Options → Configure Options**  
+
+**Purpose:** Ensures clients automatically receive all necessary network settings.
+
+
+## 5. Test DHCP Functionality
+
+### On a Windows Client VM:
+1. Set the network adapter to **Obtain IP automatically**.  
+2. Run the following command in Command Prompt:
+
+```powershell
+ipconfig /release
+ipconfig /renew
+ipconfig /all
+
+
+# Domain Controller (DC) Setup – Step-by-Step Documentation
+## 1. Prepare the Server
+
+1. Install **Windows Server** on your VM.  
+2. Assign a **static IP address**:
+   - Example: `192.168.x.xx`  
+   - Subnet Mask: `255.255.255.0`  
+   - Default Gateway: `192.168.x.xx`  
+   - Preferred DNS: `192.168.x.xx` (self, for AD DNS)  
+3. Update Windows with the latest patches.  
+4. Ensure your **hostname** is descriptive.
+
+
+## 2. Install Active Directory Domain Services (AD DS)
+
+1. Open Server Manager → Add Roles and Features.  
+2. Click Next until Server Roles.  
+3. Select Active Directory Domain Services → click Add Features.  
+4. Continue → Next → Install.  
+5. Wait for the installation to complete.
+
+
+## 3. Promote the Server to Domain Controller
+
+1. In Server Manager, click the notification flag → Promote this server to a domain controller.
+2. Select Active Directory Domain Services → click Add Features.  
+3. Continue → Next → Install.  
+4. Wait for the installation to complete. 
+5. Choose add a new forest (if this is your first DC).  
+6. Enter the root domain name (e.g., `xxxxxxx.local`).  
+7. Set Forest and Domain Functional Levels 
+8. Set a DSRM (Directory Services Restore Mode) password and store it securely.  
+9. Ensure DNS server and **Global Catalog (GC) options are checked.  
+10. Click Next → Install.  
+11. The server will automatically reboot after promotion.
+
+
+## 4. Verify Domain Controller Status
+
+### Method A: Server Manager
+- Tools → Active Directory Users and Computers, DNS, Group Policy Management should be available.
+
+### Method B: Command Line
+powershell
+nltest /dsgetdc:xxxxxxx.local
+
+
+## Create User Accounts
+User1:Barack H. Obama (Sales Dept.)
+User2:Kalama P. Harris (Finance Dept.)
+User3:Tim D. Walz (IT Dept.)
+User4:Reese M. Waters (Finance Dept
+
+User accounts allow individuals to authenticate to the domain and access resources.
+
+### Steps:
+1. Open Active Directory Users and Computers
+2. Navigate to the Users OU
+3. Right-click → New → User
+4. Enter:
+   - First name
+   - Last name
+   - User logon name (e.g., `reesewaters`)
+5. Click Next
+6. Set a password
+7. Choose password options:
+   - Uncheck User must change password at next logon (recommended for lab use)
+8. Click Finish
+
+### Verification:
+- User appears under the Users OU
+- Account status is Enabled
+
+
+## 3. Create Security Groups
+
+Groups are used to assign permissions and manage access to resources.
+
+### Steps:
+1. In Active Directory Users and Computers
+2. Navigate to the Groups OU
+3. Right-click → New → Group
+4. Enter:
+   - Group name (example: `FINANCE-GROUP`)
+5. Select:
+   - Group scope: Global
+   - Group type: Security
+6. Click OK
+
+### Common Group Types:
+- Global Security Groups – Used for assigning permissions
+- Domain Local Groups – Used for resource access control
+- Universal Groups – Used in multi-domain environments
+
+
+## 4. Add Users to Groups
+
+Assign users to groups to grant permissions.
+
+### Steps:
+1. Right-click the group → Properties
+2. Open the Members tab
+3. Click Add
+4. Enter the username(s)
+5. Click Check Names
+6. Click OK
+
+
+## 5. (Optional) Move Users and Computers to OUs
+
+1. In **ADUC**, locate the object (user or computer)
+2. Right-click → Move
+3. Select the destination OU
+4. Click OK
+
+
+## 6. Verify Configuration
+
+### Verify User Membership:
+- Right-click user → Properties → Member Of
+
+### Verify Group Membership:
+- Right-click group → Members
+
+
+## 7. Best Practices
+
+- Use OUs for management, not security
+- Use groups for permissions, not individual users
+- Follow a naming convention:
+  - Users: `firstname.lastname`
+  - Groups: `ROLE-Function` (e.g., `IT-GROUP`)
+- Always enable “Protect container from accidental deletion”
+- Document all OUs, users, and groups in your repository
+
+
+### Summary
+
+This configuration enables:
+- Logical organization of directory objects using OUs
+- Centralized user authentication
+- Scalable permission management through security groups
+- Effective application of Group Policies at the OU level
+
+This setup forms the foundation for Group Policy management and secure access control in a Windows domain environment.
+
+
+## Join domain:
+Right-click This PC → Properties → Computer name, domain, workgroup settings → Change settings → Rename this PC or for WIN11 below
+Right-click This PC → Properties → Domain or Workgroup
+Click Change → Join domain: init.xxxxxxx.com
+Login with a domain admin account after restart.
+
+
+## Group policy management:
+This explains how to create, link, apply,
+ and verify a **Group Policy Object (GPO)** in a Windows Active Directory environment. 
+The policy is applied to a target **Organizational Unit (OU)** and verified on a domain-joined client machine.
+### Environment
+- **Domain Controller**: Windows Server (Active Directory Domain Services installed)
+- **Client Machine**: Windows client joined to the domain
+- **Tools Used**:
+  - Active Directory Users and Computers
+  - Group Policy Management Console (GPMC)
+  - Command Prompt / PowerShell
+## Step 1: Prepare the Target OU
+
+1. Open **Active Directory Users and Computers**
+## Step 2: Create and Link the GPO
+
+1. Open **Group Policy Management**
+Win + R → gpmc.msc
+
+2. Navigate to:
+Forest → Domains → yourdomain.local
+
+3. Right-click the target OU
+4. Select **Create a GPO in this domain, and Link it here**
+5. Name the GPO clearly, for example: "Finance GP policy"
+Lab-User-Restrictions
+The GPO is now **created and linked** to the OU.
+
+## Step 3: Configure the GPO
+
+1. Right-click the newly created GPO
+2. Select **Edit**
+3. Choose the appropriate configuration section:
+- **User Configuration** → applies to users
+- **Computer Configuration** → applies to computers
+
+### Example Configuration
+Disable Control Panel for users: Disable Control Panel for Sales Dept. OU
+4. Set the policy to **Enabled**
+5. Close the editor
+
+## Step 4: Ensure the GPO Is Linked
+
+1. In **Group Policy Management**, select the target OU
+2. Review **Linked Group Policy Objects**
+
+Verify:
+- The GPO appears in the list
+- The link status is **Enabled**
+- The link order is correct if multiple GPOs exist
+
+## Step 5: Apply Group Policy on the Client
+
+On the domain-joined client machine:
+gpupdate /force
