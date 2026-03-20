@@ -114,3 +114,110 @@ This document describes how virtualization is implemented in the home lab.
   - Higher RAM requirement than lightweight VMs
   - Performance depends on host resources
   - Not intended for production workloads
+
+
+GUEST ADDITION CD IMAGE 
+FOR LINUX
+1. Insert the Guest Additions CD image
+* From the VM window menu:
+* Devices → Insert Guest Additions CD Image
+* This virtually inserts the ISO into your VM.
+
+2. Mount the CD (if it doesn’t auto-mount)
+Most modern distros auto-mount it. If not, do it manually:
+- sudo mkdir -p /mnt/cdrom
+- sudo mount /dev/cdrom /mnt/cdrom
+
+* If /dev/cdrom doesn’t work, try:
+- lsblk
+- Look for something like /dev/sr0, then:
+- sudo mount /dev/sr0 /mnt/cdrom
+
+3. Run the installer
+- cd /mnt/cdrom
+- sudo sh VBoxLinuxAdditions.run
+
+4. Install required dependencies (if it fails)
+* If you get errors about missing build tools:
+** Ubuntu/Debian:
+- sudo apt update
+- sudo apt install build-essential dkms linux-headers-$(uname -r)
+
+* RHEL/CentOS:
+- sudo yum install gcc make perl kernel-devel kernel-headers
+
+Then run the installer again.
+
+5. Reboot
+sudo reboot
+
+
+FOR WINDOWS
+1. Insert the Guest Additions CD image
+In your running Windows VM:
+- Go to Devices → Insert Guest Additions CD Image
+- This attaches a virtual CD to the Windows system.
+
+2. Open the CD in Windows
+Usually, Windows will auto-open it. If not:
+- Open File Explorer
+- Go to This PC
+- Look for a drive like:
+VirtualBox Guest Additions
+Typically labeled as a CD drive
+Double-click it.
+
+3. Run the installer
+
+* Inside the CD:
+
+* Double-click:
+- VBoxWindowsAdditions.exe (for 32-bit), or
+- VBoxWindowsAdditions-amd64.exe (for 64-bit systems)
+- Or right-click → Run as administrator
+
+4. Accept prompts
+- Allow installation when Windows asks
+- Approve driver installation warnings (if shown)
+
+5. Reboot the VM
+- After installation completes:
+- Restart your Windows VM
+
+
+The Guest Additions CD image in VirtualBox is used to install extra drivers and tools inside a virtual machine (VM) to improve its performance and usability. Without it, your VM works—but feels limited and clunky.
+
+Here are the main aims (purposes):
+
+1. Better graphics and display
+Enables higher screen resolutions
+Allows fullscreen mode
+Provides seamless resizing of the VM window
+Improves overall graphics performance
+
+2. Smooth mouse integration
+No need to press a key to “release” the mouse
+Cursor moves freely between host and VM
+
+3. Clipboard sharing
+Copy-paste between host and VM (both directions)
+
+4. Shared folders
+Lets you access files between your host OS and VM easily
+Useful for transferring data without USB or networking
+
+5. Improved system performance
+Optimized drivers (especially for video and input)
+Better responsiveness compared to a plain VM install
+
+6. Time synchronization
+Keeps VM clock synced with the host machine
+
+7. Seamless mode
+Integrates VM apps into your host desktop (apps appear side-by-side)
+
+8. Enhanced device support
+Better handling of input devices and sometimes display acceleration
+
+In short:
+The Guest Additions CD image is used to bridge the gap between the host and the virtual machine, making the VM behave more like a real, fully integrated system instead of an isolated environment.
