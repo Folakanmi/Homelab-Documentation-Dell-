@@ -1,0 +1,98 @@
+Step 1 — Update Your System
+sudo apt update && sudo apt upgrade -y
+
+Step 2 — Download Wazuh Installer
+curl -sO https://packages.wazuh.com/4.7.5/wazuh-install.sh
+
+Step 3 — Install Wazuh (All-in-One)
+* This installs:
+** Wazuh Manager
+** Wazuh Indexer
+** Wazuh Dashboard
+*sudo bash wazuh-install.sh -a
+
+Step 4 — Get Login Credentials
+After installation, credentials are saved in a file.
+sudo tar -O -xvf wazuh-install-files.tar wazuh-install-files/wazuh-passwords.txt
+admin: <password>
+
+Step 5 — Check Services
+Make sure everything is running:
+
+* sudo systemctl status wazuh-manager
+* sudo systemctl status wazuh-indexer
+* sudo systemctl status wazuh-dashboard
+
+You want:
+active (running)
+Also check on what port the indexer is listening
+New installs often use port 443 (NOT 5601)
+
+Step 6 — Open Wazuh Dashboard
+* From your browser:
+** https://<your-server-ip>
+
+** Bypass HTTPS Warning
+** You’ll see:
+“Your connection is not private”
+* Click:
+** Advanced
+** Proceed
+
+Step 7 — Login
+Username: admin
+Password: (from Step 4)
+
+Step 8 — Verify It Works
+Inside dashboard:
+Go to Security Events
+Search:
+event.id: *
+
+Step 9 — Install Wazuh Agent (on Windows)
+On your Windows VM:
+Download agent from Wazuh website
+
+* Install it
+** During setup:
+** Enter Wazuh server IP
+
+* Register agent manually (if needed)
+
+* On Windows:
+** "C:\Program Files (x86)\ossec-agent\agent-auth.exe" -m <WAZUH-SERVER-IP>
+* Then start agent:
+** net start wazuh-agent
+
+Step 10 — Confirm Agent Connected
+
+On server:
+sudo /var/ossec/bin/agent_control -l
+You should see your Windows machine listed.
+
+Step 12 — Start Seeing Logs
+In dashboard:
+
+Go to Endpoints → Agents
+Click your Windows agent
+Go to Events
+
+Common Issues (Quick Fixes)
+** Can’t access dashboard
+
+Try:
+https://<ip>
+
+Check:
+sudo ss -tulnp | grep 443
+
+** Dashboard shows errors
+
+Check:
+sudo systemctl status wazuh-indexer
+
+** No logs from Windows
+
+Restart agent:
+net stop wazuh-agent
+net start wazuh-agent
