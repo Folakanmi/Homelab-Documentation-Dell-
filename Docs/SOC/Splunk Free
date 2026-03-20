@@ -1,0 +1,115 @@
+Creation of Splunk Enterprise
+
+Step 1 — Create Splunk Account & Download
+Go to: https://www.splunk.com
+Sign up (free account required)
+
+Download:
+Splunk Enterprise (Linux .deb) for Ubuntu
+
+Step 2 — Install Splunk on Ubuntu
+
+Move to your download directory:
+cd ~/Downloads
+
+Install the package:
+sudo dpkg -i splunk-*.deb
+
+If dependencies fail:
+sudo apt-get install -f -y
+
+Step 3 — Start Splunk
+sudo /opt/splunk/bin/splunk start
+First run will:
+
+Ask you to accept license → type Y
+Ask you to create:
+
+Username:
+Password:
+Save these credentials
+
+Step 4 — Enable Auto Start (optional)
+sudo /opt/splunk/bin/splunk enable boot-start
+
+Step 5 — Access Splunk Web UI
+
+Open browser:
+http://<your-server-ip>:8000
+Example:
+http://192.168.1.100:8000
+
+Step 6 — Login
+Use:
+Username: (you created)
+Password: (you created)
+
+Step 7 — Convert to Free License
+By default, you’re on a trial.
+To switch to free:
+
+Go to:
+Settings → Licensing
+Click:
+Change License Group
+Select:
+Free
+
+Restart Splunk:
+sudo /opt/splunk/bin/splunk restart
+
+Step 8 — Add Data (Important)
+Option A: Monitor local logs
+
+In UI:
+Settings → Add Data
+
+Choose:
+Files & Directories
+
+Add:
+/var/log/syslog
+
+Option B: Install Universal Forwarder (Windows)
+On your Windows lab machine:
+Download Splunk Universal Forwarder
+Install it
+
+During setup:
+Enter Splunk server IP
+Port: 9997 (we’ll enable this next)
+
+Step 9 — Enable Receiving Port
+On Splunk server:
+Go to:
+Settings → Forwarding and receiving
+
+Click:
+Configure receiving
+Add port:
+9997
+
+Step 10 — Search Logs
+
+Go to:
+Search & Reporting
+
+Try:
+index=_internal
+
+Or:
+index=* | head 20
+
+Step 11 — Test with Real Activity
+
+On your system:
+whoami
+ls
+
+Then search:
+index=* whoami
+
+LIMITATIONS
+❌ No authentication features (some RBAC disabled)
+❌ Max 500 MB/day ingestion
+❌ No clustering
