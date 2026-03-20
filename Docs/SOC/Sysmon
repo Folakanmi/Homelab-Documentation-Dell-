@@ -1,1 +1,82 @@
 
+Step 1 — Open the Sysinternals page
+Go to the official Microsoft Sysinternals download page:
+https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon
+
+Step 2 — Download the ZIP file
+Click the Download Sysmon link.
+
+Step 3 — Extract the ZIP
+* Right-click → Extract All
+or
+WinRAR or 7-Zip
+** Free, open-source, and very powerful
+** High compression ratio using 7z format
+** Supports ZIP, RAR (extract), TAR, etc.
+** Uses strong AES-256 encryption
+
+Or use PowerShell:
+Expand-Archive -Path C:\Temp\Sysmon\Sysmon.zip -DestinationPath C:\Temp\Sysmon
+
+After extraction, you’ll see:
+Sysmon.exe → 32-bit version
+Sysmon64.exe → 64-bit version (use this on modern lab machines)
+
+Step 4 — Install Sysmon
+Open PowerShell as Administrator
+Navigate to the folder:
+cd C:\Temp\Sysmon
+Install Sysmon as a service with default settings:
+.\Sysmon64.exe -accepteula -i
+-i → install
+-accepteula → accept license automatically
+
+Step 3 — Download a Sysmon Config File
+Using a config file reduces noise and captures the events you care about. We’ll use SwiftOnSecurity’s baseline.
+# Download Sysmon configuration
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/SwiftOnSecurity/sysmon-config/master/sysmonconfig-export.xml -OutFile C:\Temp\Sysmon\sysmonconfig.xml
+
+Step 4 — Apply the Config File
+.\Sysmon64.exe -c C:\Temp\Sysmon\sysmonconfig.xml
+-c → apply or update configuration
+You can rerun this whenever you want to update rules without reinstalling Sysmon.
+
+Step 5 — Verify Sysmon Installation
+In PowerShell:
+
+sysmon -c  # Shows current config
+sysmon -s  # Shows status of the service
+
+Open Event Viewer:
+
+Applications and Services Logs → Microsoft → Windows → Sysmon → Operational
+You should start seeing events like:
+Event ID 1 → Process creation
+Event ID 3 → Network connections
+
+Step 6 — Integrate with Wazuh Agent
+Open your Wazuh agent configuration file:
+notepad "C:\Program Files (x86)\ossec-agent\ossec.conf"
+Add a block to collect Sysmon logs: ("Before </ossec_config>" and "END of Default Configuration" at the bottom of the file).
+
+<localfile>
+  <log_format>eventchannel</log_format>
+  <location>Microsoft-Windows-Sysmon/Operational</location>
+</localfile>
+
+Save the file and restart Wazuh agent:
+net stop wazuh-agent
+net start wazuh-agent
+
+Step 7 — Test Sysmon Logging
+Open PowerShell and run:
+notepad.exe
+powershell -c "whoami"
+
+Check Event Viewer → Sysmon logs → you should see Event ID 1 for each process creation.
+Check Wazuh dashboard → after a few minutes, these events should appear.
+
+Step 8 — Optional: Update Sysmon Config Later
+If you want to refine detection:
+# Reapply updated config
+.\Sysmon64.exe -c C:\Temp\Sysmon\sysmonconfig.xml
