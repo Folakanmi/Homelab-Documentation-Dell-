@@ -55,6 +55,18 @@ Download agent from Wazuh website
 
 * Install it
 ** During setup:
+Install & Configure Wazuh Agent on Windows 11
+Download Wazuh agent for Windows: Wazuh Downloads
+Install agent with default options. During setup, specify Manager IP (192.168.xx.xxx) and port 1514, 1515 and 56000 (TCP/UDP).
+
+After installation, edit ossec.conf if needed:
+
+<server>
+  <address>192.168.xx.xxx</address>
+</server>
+Start the agent service:
+net start WazuhAgent
+
 ** Enter Wazuh server IP
 
 * Register agent manually (if needed)
