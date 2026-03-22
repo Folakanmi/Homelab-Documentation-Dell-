@@ -40,9 +40,9 @@ This document describes how virtualization is implemented in the home lab.
 - SIEM
 
 ## Resource Allocation
-- CPUs: 1 VM
-- Memory: 2 VM
-- Storage: 25GB (VDI) 
+- CPUs: 2 VM
+- Memory: 4 VM
+- Storage: 35GB (VDI) 
 
 ## Why VirtualBox
 - Easy to use for learning
