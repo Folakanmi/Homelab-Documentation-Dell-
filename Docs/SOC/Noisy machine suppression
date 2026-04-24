@@ -1,0 +1,31 @@
+<rule id="100001" level="5">
+  <if_sid>5716</if_sid>
+  <srcip>1.1.1.1</srcip>
+  <description>sshd: authentication failed from IP 1.1.1.1.</description>
+  <group>authentication_failed,pci_dss_10.2.4,pci_dss_10.2.5</group>
+</rule>
+
+<rule id="100100" level="0">
+  <if_sid>60103</if_sid>
+  <field name="win.eventdata.targetUserName">.*\$</field>
+  <description>Ignore machine account logons</description>
+</rule>
+
+<rule id="100101" level="0">
+  <if_sid>60103</if_sid>
+  <field name="win.eventdata.ipAddress">::1</field>
+  <description>Ignore localhost authentication noise</description>
+</rule>
+
+<rule id="100102" level="2">
+  <if_sid>60103</if_sid>
+  <field name="win.eventdata.targetUserName">.*\$</field>
+  <description>Lower priority for service accounts</description>
+</rule>
+
+<rule id="100104" level="0">
+  <if_sid>60103</if_sid>
+  <field name="win.eventdata.authenticationPackageName">Kerberos</field>
+  <field name="win.eventdata.targetUserName">.*\$</field>
+  <description>Suppress Kerberos machine authentication noise</description>
+</rule>
