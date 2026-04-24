@@ -1,0 +1,135 @@
+Objective
+Configure a centralized time synchronization architecture:
+Internet NTP → Ubuntu Chrony Server → All Endpoints (Windows + Linux)
+This ensures consistent timestamps across systems for accurate log correlation in SIEM platforms like Wazuh.
+
+1. Install Chrony (Ubuntu Server)
+sudo apt update
+sudo apt install chrony -y
+
+2. Configure Chrony Server
+# Edit the configuration file:
+## sudo nano /etc/chrony/chrony.conf
+
+Recommended Configuration
+# Use trusted internet NTP sources (upstream)
+pool ntp.ubuntu.com iburst
+
+# Allow internal network clients
+allow 192.168.x.0/24
+
+# Optional: logging
+logdir /var/log/chrony
+
+Notes
+pool → upstream internet time sources
+allow → permits clients in your network to sync
+
+3. Restart and Enable Chrony
+sudo systemctl restart chrony
+sudo systemctl enable chrony
+
+4. Verify Chrony Server Status
+chronyc tracking
+Expected Output:
+Reference ID → external NTP server (e.g., tock.espanix.net)
+Stratum → 2 (normal)
+Leap status → Normal
+chronyc sources
+Expected Output:
+^* ntp-server (active source)
+
+5. Configure Linux Clients
+
+Edit client configuration:
+
+sudo nano /etc/chrony/chrony.conf
+Replace existing pools with:
+server 192.168.x.xx iburst
+
+Restart Chrony:
+sudo systemctl restart chrony
+
+Verify client sync:
+chronyc sources
+Expected:
+^* 192.168.x.xx
+
+6. Configure Windows Clients
+Open Command Prompt as Administrator and run:
+w32tm /config /manualpeerlist:"192.168.x.xx" /syncfromflags:manual /update
+net stop w32time
+net start w32time
+w32tm /resync
+
+Verify:
+w32tm /query /status
+Expected:
+Source: 192.168.x.xx
+Stratum: 3
+
+7. Validate Time Synchronization Across Systems
+On Linux:
+date
+On Windows:
+time /T
+
+All systems should have nearly identical time.
+
+8. Verify Time Hierarchy
+On Linux Clients:
+chronyc sources
+Expected:
+^* 192.168.1.51
+
+On Chrony Server:
+chronyc tracking
+Expected:
+Reference ID → external NTP
+
+On Windows:
+w32tm /query /status
+Expected:
+Source: 192.168.x.xx
+
+Troubleshooting
+Error: 506 Cannot talk to daemon
+sudo systemctl start chrony
+Chrony fails to start
+
+Check logs:
+journalctl -xeu chrony.service
+Wrong time source on client
+
+Ensure:
+
+No external pool lines remain
+Correct server IP is configured
+
+SOC Considerations
+
+In a SOC environment:
+# All endpoints must use a single trusted time source
+# Time drift can indicate:
+# misconfiguration
+# VM rollback
+# attacker tampering
+
+Accurate time is critical for:
+Event correlation
+Incident response
+Timeline reconstruction
+
+Final Architecture
+Internet NTP
+     ↓
+Ubuntu Chrony Server (192.168.x.xx)
+     ↓
+Windows + Linux Clients
+     ↓
+SIEM (Wazuh)
+Outcome
+Centralized time synchronization
+Consistent logs across all endpoints
+SOC-ready lab environment
+Real-world enterprise architecture simulation
