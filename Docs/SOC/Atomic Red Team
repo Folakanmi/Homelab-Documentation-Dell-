@@ -1,0 +1,81 @@
+Prerequisites
+Windows 10 / 11 (or Windows Server)
+PowerShell 5.1+
+Administrator privileges
+Internet access (or offline files prepared)
+Logging tools (recommended):
+Sysmon
+Wazuh agent
+
+Step 1: Open PowerShell as Administrator
+Click Start
+Search PowerShell
+Right-click → Run as Administrator
+
+Step 2: Allow Script Execution (Temporary)
+Set-ExecutionPolicy Bypass -Scope Process -Force
+
+Step 3: Install NuGet Provider (if required)
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
+
+Step 4: Install Invoke-AtomicRedTeam Module
+Install-Module Invoke-AtomicRedTeam -Scope CurrentUser -Force
+
+Step 5: Install Atomic Test Repository
+Install-AtomicRedTeam -GetAtomics
+
+Default install location:
+C:\AtomicRedTeam
+
+Step 6: Import the Module
+Import-Module Invoke-AtomicRedTeam
+
+Step 7: Verify Installation
+Get-Command Invoke-AtomicTest
+
+Expected output:
+CommandType: Function
+Name: Invoke-AtomicTest
+
+Step 8: Run a Test (Safe Example)
+Invoke-AtomicTest T1059 -TestNumbers 1
+
+Step 9: Validate Logs
+After running a test, verify detection in:
+
+Windows Logs
+Event Viewer → Security
+Event ID 4688 (process creation)
+Sysmon Logs
+Event ID 1 (process creation)
+SIEM
+Check alerts in Wazuh dashboard
+
+Troubleshooting
+# Module not found
+## Import-Module Invoke-AtomicRedTeam
+# Execution policy error
+## Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+# No internet / NuGet failure
+## Enable NAT or internet access
+
+Verify DNS:
+Test-NetConnection google.com -Port 443
+
+Security Notes
+Do NOT run in production environments
+Use isolated lab VMs
+Take snapshots before running tests
+Keep Defender enabled with exclusions if needed
+
+Outcome
+You now have:
+
+Atomic Red Team installed
+MITRE ATT&CK test execution capability
+Integration with Sysmon + SIEM for detection validation
+
+Next Steps
+Map tests to detection rules
+Simulate attack chains (execution → persistence → lateral movement)
+Tune alerts in Wazuh
