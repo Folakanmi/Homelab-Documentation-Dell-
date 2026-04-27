@@ -29,4 +29,8 @@ Here is my screenshot:
 
 
 Here is my screenshot:
-![Sysmon Event](images/sysmon-event.png)
+![Sysmon Event](Docs/SOC/Sysmon-Event 1.png)
+![Sysmon Event](Docs/SOC/Sysmon-Event 2.png)
+
+
+
