@@ -22,3 +22,4 @@ self-hosted services.
 
 > IPs, hostnames, and secrets are sanitized.
 
+![Atomic-test](Docs/SOC/Images.png)
