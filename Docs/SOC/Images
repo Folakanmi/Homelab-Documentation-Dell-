@@ -1,0 +1,12 @@
+## Atomic Red Team Execution (T1059)
+
+![Atomic Test](images/atomic-test.png)
+
+## Sysmon Detection (Event ID 1)
+
+![Sysmon Event](images/sysmon-event.png)
+
+## Wazuh Alert
+
+![Wazuh Dashboard](images/wazuh-dashboard.png)
+
