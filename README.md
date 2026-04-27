@@ -21,3 +21,4 @@ self-hosted services.
 - [Virtualization](docs/virtualization.md)
 
 > IPs, hostnames, and secrets are sanitized.
+
