@@ -22,4 +22,11 @@ self-hosted services.
 
 > IPs, hostnames, and secrets are sanitized.
 
-![Atomic-test](Docs/SOC/Images.png)
+# My Image Page
+
+Here is my screenshot:
+![Atomic-test](Docs/SOC/Atomic-test.png)
+
+
+Here is my screenshot:
+![Sysmon Event](images/sysmon-event.png)
