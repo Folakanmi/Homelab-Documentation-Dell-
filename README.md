@@ -33,5 +33,6 @@ Here is my screenshot:
 ![Sysmon Event](Docs/SOC/Sysmon-Event 2.png)
 
 Here is my screenshot:
+https://github.com/Folakanmi/Homelab-Documentation-Dell-/blob/main/Docs/SOC/Wazuh-Dashboard%201.png?raw=true
 ![wazuh dash view](Docs/SOC/Wazuh-Dashboard 1.png)
 
