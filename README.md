@@ -1,5 +1,3 @@
-<img width="3840" height="1788" alt="Wazuh-Dashboard 1" src="https://github.com/user-attachments/assets/1c786ea5-d0f6-4211-83f9-987293ad938a" />
-<img width="3840" height="1788" alt="Wazuh-Dashboard 1" src="https://github.com/user-attachments/assets/445b0736-acc1-4bb2-a18b-a036676118b8" />
 # Homelab-Documentation-Dell-
 Documentation of my home lab build, including hardware, networking, virtualization, and self-hosted services.
 This repository documents the design, setup, and maintenance of my home lab.
@@ -35,5 +33,6 @@ Here is my screenshot:
 ![Sysmon Event](Docs/SOC/Sysmon-Event 2.png)
 
 Here is my screenshot:
+<img width="3840" height="1788" alt="Wazuh-Dashboard 1" src="https://github.com/user-attachments/assets/1c786ea5-d0f6-4211-83f9-987293ad938a" />
 ![wazuh dash view](Docs/SOC/Wazuh-Dashboard 1.png)
 
