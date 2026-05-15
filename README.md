@@ -32,5 +32,6 @@ Here is my screenshot:
 ![Sysmon Event](Docs/SOC/Sysmon-Event 1.png)
 ![Sysmon Event](Docs/SOC/Sysmon-Event 2.png)
 
-
+Here is my screenshot:
+![wazuh dash view](Docs/SOC/Wazuh-Dashboard 1.png)
 
