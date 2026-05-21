@@ -1,0 +1,75 @@
+# OVERVIEW:
+
+This report documents a Sysmon Event ID 1 (Process Creation) alert detected and indexed by Wazuh. 
+The event shows PowerShell executing a suspicious script from a temporary directory, which is commonly associated with defense evasion and malicious scripting activity.
+
+# IMPORTANCE:
+PowerShell is heavily abused by attackers because it:
+Executes scripts directly in memory
+Can download payloads remotely
+Supports obfuscation
+Is commonly used for:
+Initial access
+Persistence
+Privilege escalation
+Defense evasion
+Execution from the Temp directory is particularly suspicious because malware frequently stages payloads there.
+
+# DETECTION SUMMARY:
+Field	Value
+Detection Platform	Wazuh
+Log Source	Sysmon
+Event ID	1
+Technique	PowerShell Execution
+MITRE ATT&CK	T1059.001
+Hostname	Client01
+Severity	15
+Process	powershell.exe
+User	CLIENT01
+
+# EVENT DETAILS:
+
+Process Information
+Image:
+C:\WINDOWS\Sysmon64\WindowsPowerShell\v1.0\powershell.exe
+
+Command Activity
+TargetFilename:
+C:\Users\Mini-Client0\AppData\Local\Temp\__PSScriptPolicyTest_4tca0m1.ixz.ps1
+
+Parent Process
+ParentImage:
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+
+Sysmon Metadata
+RuleName:
+technique_id=T1059.001,technique_name=PowerShell
+
+# MITRE ATT&CK Mapping
+Tactic	Technique
+Execution	T1059.001 — PowerShell
+Home > Techniques > Enterprise > Command and Scripting Interpreter > PowerShell
+
+Investigation Steps Performed:
+Verified Sysmon logging
+Confirmed Event ID 1 ingestion into Wazuh
+Reviewed process execution path
+Correlated PowerShell execution with MITRE ATT&CK mapping
+Validated alert indexing inside the Wazuh dashboard
+
+DETECTION OUTCOMES:
+The alert demonstrates successful:
+
+Sysmon telemetry collection
+Wazuh log ingestion
+MITRE ATT&CK mapping
+Suspicious PowerShell execution detection
+SOC visibility into Windows endpoint activity
+
+RECOMMENDATIONS:
+Defensive Actions
+Restrict PowerShell execution where possible
+Enable PowerShell Script Block Logging
+Monitor Temp directory script execution
+Use constrained language mode
+Alert on encoded PowerShell commands
