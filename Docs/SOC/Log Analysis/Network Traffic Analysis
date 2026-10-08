@@ -1,0 +1,445 @@
+# Project 5: Network Traffic Analysis Using Wireshark, TCPdump, Nmap and Fowsniff CTF
+
+## Introduction
+
+In this project, I analyzed network traffic using Wireshark, TCPdump, and Nmap, and investigated network activity through the Fowsniff CTF from TryHackMe. I captured and inspected packets, identified network services, analyzed TCP and HTTP traffic, and investigated suspicious activity.
+
+The project helped me develop practical network-analysis skills relevant to SOC monitoring, network reconnaissance, incident investigation, and basic network forensics.
+
+---
+
+## Pre-requisites
+
+* Basic networking knowledge (TCP/IP, DNS, HTTP, TCP and UDP)
+* Basic Linux command-line knowledge
+* Basic understanding of IP addresses, ports, and network services
+* Ubuntu Linux or another Linux distribution
+* Windows or Linux system for Wireshark
+* Basic familiarity with TryHackMe
+
+---
+
+## Lab Setup and Tools
+
+* Ubuntu Linux VM
+* Wireshark
+* TCPdump
+* Nmap
+* TryHackMe Fowsniff CTF
+* Sample PCAP files
+* Terminal
+* Web browser
+
+---
+
+# Exercise 1: Basic Network Traffic Analysis with Wireshark
+
+### Expected Output
+
+I captured or opened network traffic in Wireshark and identified basic packet information such as source and destination IP addresses, protocols, ports, packet numbers, and TCP communication.
+
+### Steps
+
+1. I opened Wireshark.
+
+2. I selected the active network interface.
+
+3. I started a packet capture.
+
+4. I generated some network traffic by opening a website or using:
+
+```bash
+ping google.com
+```
+
+5. I stopped the capture after generating traffic.
+
+6. I reviewed the packet list and identified:
+
+* Source IP
+* Destination IP
+* Protocol
+* Source port
+* Destination port
+* Packet length
+* TCP flags
+
+7. I applied basic display filters such as:
+
+```text
+tcp
+```
+
+```text
+udp
+```
+
+```text
+dns
+```
+
+```text
+http
+```
+
+```text
+icmp
+```
+
+8. I selected individual packets and expanded the protocol sections to examine their details.
+
+---
+
+# Exercise 2: TCP Traffic Analysis with Wireshark
+
+### Expected Output
+
+I identified TCP connections and examined the TCP three-way handshake, TCP flags, source and destination ports, and communication between hosts.
+
+### Steps
+
+1. I captured or opened a PCAP containing TCP traffic.
+
+2. I applied the following filter:
+
+```text
+tcp
+```
+
+3. I identified TCP SYN packets:
+
+```text
+tcp.flags.syn == 1
+```
+
+4. I identified SYN-ACK responses:
+
+```text
+tcp.flags.syn == 1 && tcp.flags.ack == 1
+```
+
+5. I identified TCP reset packets:
+
+```text
+tcp.flags.reset == 1
+```
+
+6. I followed a TCP conversation by right-clicking a packet and selecting:
+
+**Follow → TCP Stream**
+
+7. I reviewed the conversation and identified the communicating hosts, ports, and transmitted information.
+
+---
+
+# Exercise 3: Basic TCPdump Network Capture
+
+### Expected Output
+
+I used TCPdump to capture network traffic from the command line and filtered traffic based on protocols, hosts, and ports.
+
+### Steps
+
+1. I identified the available network interfaces:
+
+```bash
+ip addr
+```
+
+2. I identified the interface used for network communication.
+
+3. I captured traffic using TCPdump:
+
+```bash
+sudo tcpdump -i eth0
+```
+
+4. I generated traffic from another terminal:
+
+```bash
+ping google.com
+```
+
+5. I stopped the capture using:
+
+```text
+Ctrl+C
+```
+
+6. I captured only ICMP traffic:
+
+```bash
+sudo tcpdump -i eth0 icmp
+```
+
+7. I captured TCP traffic:
+
+```bash
+sudo tcpdump -i eth0 tcp
+```
+
+8. I filtered traffic for a specific port:
+
+```bash
+sudo tcpdump -i eth0 port 80
+```
+
+9. I saved captured traffic to a PCAP file:
+
+```bash
+sudo tcpdump -i eth0 -w network_capture.pcap
+```
+
+10. I opened the resulting PCAP in Wireshark for detailed analysis.
+
+> **Note:** The network interface may be `ens33`, `enp0s3`, `eth0`, or another name depending on the VM configuration. I used the interface identified with `ip addr`.
+
+---
+
+# Exercise 4: Network Reconnaissance with Nmap
+
+### Expected Output
+
+I used Nmap to identify live hosts, open ports, running services, and potential attack surfaces within my authorized lab environment.
+
+### Steps
+
+1. I identified my local network:
+
+```bash
+ip addr
+```
+
+2. I performed a basic scan against an authorized lab system:
+
+```bash
+nmap <TARGET-IP>
+```
+
+3. I performed a service and version scan:
+
+```bash
+nmap -sV <TARGET-IP>
+```
+
+4. I performed an operating-system detection scan:
+
+```bash
+sudo nmap -O <TARGET-IP>
+```
+
+5. I performed a more comprehensive scan in the isolated lab:
+
+```bash
+sudo nmap -A <TARGET-IP>
+```
+
+6. I recorded the following information:
+
+* Target IP address
+* Open ports
+* Port numbers
+* Protocols
+* Detected services
+* Service versions
+* Possible attack surface
+
+7. I compared the Nmap results with the network traffic observed in Wireshark.
+
+---
+
+# Exercise 5: Investigating Network Traffic with the Fowsniff CTF
+
+### Expected Output
+
+I investigated the Fowsniff CTF environment and used network enumeration and traffic-analysis techniques to identify exposed services, understand the attack surface, and investigate suspicious network activity.
+
+### Steps
+
+1. I opened the Fowsniff CTF on TryHackMe.
+
+2. I started the assigned target machine.
+
+3. I identified the target IP address provided by the lab.
+
+4. I performed an initial Nmap scan:
+
+```bash
+nmap <TARGET-IP>
+```
+
+5. I performed service enumeration:
+
+```bash
+nmap -sV <TARGET-IP>
+```
+
+6. I recorded the open ports and services identified by Nmap.
+
+7. I investigated the available services and their associated network traffic.
+
+8. Where packet captures or network traffic were available, I opened them in Wireshark.
+
+9. I used Wireshark filters to investigate relevant protocols:
+
+```text
+tcp
+```
+
+```text
+http
+```
+
+```text
+dns
+```
+
+```text
+ftp
+```
+
+10. I followed relevant TCP streams to examine communication between hosts.
+
+11. I correlated the information from Nmap and Wireshark to understand the network activity observed during the CTF.
+
+12. I documented the significant findings and indicators identified during the investigation.
+
+---
+
+# Exercise 6: Identifying Suspicious Network Activity
+
+### Expected Output
+
+I identified potentially suspicious network behavior by examining unusual ports, repeated connection attempts, unexpected hosts, and abnormal communication patterns.
+
+### Steps
+
+1. I reviewed the captured traffic in Wireshark.
+
+2. I identified the most active source and destination IP addresses.
+
+3. I filtered traffic from a specific host:
+
+```text
+ip.addr == <TARGET-IP>
+```
+
+4. I investigated TCP connection attempts:
+
+```text
+tcp.flags.syn == 1
+```
+
+5. I investigated failed or reset connections:
+
+```text
+tcp.flags.reset == 1
+```
+
+6. I reviewed DNS traffic:
+
+```text
+dns
+```
+
+7. I investigated HTTP traffic:
+
+```text
+http
+```
+
+8. I looked for:
+
+* Repeated connection attempts
+* Connections to unusual ports
+* Unexpected external IP addresses
+* Suspicious DNS requests
+* Clear-text credentials or sensitive information
+* Unusual user agents
+* Possible scanning activity
+* Unexpected protocols
+
+9. I documented the source, destination, protocol, port, and reason why the traffic appeared suspicious.
+
+---
+
+# Exercise 7: Correlating Nmap, TCPdump and Wireshark Findings
+
+### Expected Output
+
+I correlated information from Nmap, TCPdump, and Wireshark to build a clearer picture of network activity and identify potential security issues.
+
+### Steps
+
+1. I used Nmap to identify open ports and services.
+
+2. I used TCPdump to capture network traffic.
+
+3. I opened the PCAP file in Wireshark.
+
+4. I compared the ports identified by Nmap with the traffic observed in Wireshark.
+
+5. I identified which hosts were communicating.
+
+6. I reviewed the associated protocols and TCP connections.
+
+7. I documented relationships between:
+
+* Source IP
+* Destination IP
+* Source port
+* Destination port
+* Protocol
+* Service
+* Network activity
+
+8. I summarized the findings as a basic SOC-style network investigation.
+
+---
+
+## Project Outcome
+
+After completing this project, I was able to:
+
+* Capture network traffic using TCPdump.
+* Analyze packets using Wireshark.
+* Apply Wireshark filters to investigate network activity.
+* Identify TCP connections and analyze TCP flags.
+* Perform network reconnaissance using Nmap.
+* Identify open ports and running services.
+* Investigate network activity using the Fowsniff CTF.
+* Correlate Nmap, TCPdump, and Wireshark findings.
+* Identify potentially suspicious network behavior.
+* Document findings using a basic SOC investigation approach.
+
+---
+
+## Bonus Challenge
+
+I extended the investigation by:
+
+* Creating PCAP files with TCPdump.
+* Performing deeper Wireshark analysis.
+* Investigating DNS and HTTP traffic.
+* Comparing multiple Nmap scans.
+* Identifying potential port-scanning behavior.
+* Creating a short incident investigation report.
+* Mapping observed activity to relevant MITRE ATT&CK techniques where appropriate.
+
+---
+
+## Real-World SOC Use Case
+
+SOC analysts use network-analysis tools to investigate:
+
+* Port scanning
+* Suspicious network connections
+* Malware communication
+* Unauthorized services
+* Data transfer
+* Network reconnaissance
+* Command-and-control activity
+* Suspicious DNS and HTTP traffic
+* Potential lateral movement
+
+This project simulated a basic SOC network investigation workflow using **Nmap for reconnaissance, TCPdump for packet capture, and Wireshark for detailed traffic analysis**, with the **Fowsniff CTF** providing a practical investigation environment.
