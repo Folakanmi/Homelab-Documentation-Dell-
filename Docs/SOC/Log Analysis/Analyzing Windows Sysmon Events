@@ -1,0 +1,170 @@
+# Project 4: Analyzing Windows Sysmon Events for Security Incidents
+
+## Introduction
+In this project, I used Windows Sysmon to monitor and analyze detailed system activity. I examined process creation, network connections, file creation, and image load events to identify activity that could indicate suspicious or potentially malicious behavior.
+
+## Prerequisites
+* Basic knowledge of Windows operating systems
+* Basic cybersecurity knowledge
+* Windows 10 or later
+* Internet connection for downloading Sysmon and configuration files
+* Windows virtual machine recommended for the lab
+
+## Lab Setup and Tools
+* Sysmon (System Monitor)
+* Windows Event Viewer
+* PowerShell
+* Sysmon configuration file
+
+---
+
+## Exercise 1: Installing and Verifying Sysmon
+
+### Expected Output
+I confirmed that Sysmon was installed correctly and that it was generating events in Windows Event Viewer.
+
+### Steps
+1. I downloaded Sysmon from the Microsoft Sysinternals website.
+
+2. I extracted the downloaded Sysmon files.
+
+3. I downloaded a Sysmon configuration file.
+
+4. I opened **Command Prompt as Administrator** and navigated to the Sysmon directory.
+
+5. I installed Sysmon with the configuration file:
+
+```cmd id="m3y4sn"
+sysmon -accepteula -i sysmonconfig-export.xml
+```
+
+6. I opened **Event Viewer**.
+
+7. I navigated to:
+
+```text id="p9s5i3"
+Applications and Services Logs
+→ Microsoft
+→ Windows
+→ Sysmon
+→ Operational
+```
+
+8. I checked the most recent events to confirm that Sysmon was actively recording system activity.
+
+---
+
+## Exercise 2: Analyzing Process Creation Events
+
+### Expected Output
+I identified process creation events and examined the parent process, executable, and command-line information for potentially suspicious activity.
+
+### Steps
+1. I opened:
+
+```text id="5i3f7v"
+Event Viewer
+→ Applications and Services Logs
+→ Microsoft
+→ Windows
+→ Sysmon
+→ Operational
+```
+
+2. I searched for **Event ID 1**, which records process creation.
+
+3. I reviewed individual events.
+
+4. I examined:
+
+* Process name
+* Parent process
+* Command line
+* Process path
+* User account
+* Timestamp
+
+5. I looked for unusual processes, unexpected parent-child relationships, or suspicious command-line arguments.
+
+---
+
+## Exercise 3: Analyzing Network Connection Events
+
+### Expected Output
+I identified network connection events and reviewed the source, destination, ports, and process responsible for each connection.
+
+### Steps
+1. I searched for **Event ID 3**, which records network connections.
+
+2. I reviewed the event details.
+
+3. I examined:
+
+* Source IP address
+* Source port
+* Destination IP address
+* Destination port
+* Protocol
+* Process responsible for the connection
+* Timestamp
+
+4. I investigated unexpected external connections or connections associated with unfamiliar processes.
+
+---
+
+## Exercise 4: Investigating File Creation Events
+
+### Expected Output
+I identified files created on the system and examined their locations and the processes responsible for creating them.
+
+### Steps
+1. I searched for **Event ID 11**, which records file creation.
+
+2. I reviewed the event details.
+
+3. I examined:
+
+* File name
+* File path
+* Creating process
+* User account
+* Timestamp
+
+4. I looked for unusual files created in sensitive directories or by unfamiliar applications.
+
+---
+
+## Exercise 5: Analyzing Image Load Events
+
+### Expected Output
+I identified DLL and other image-loading activity and reviewed the processes responsible for loading them.
+
+### Steps
+1. I searched for **Event ID 7**, which records image/DLL loading.
+
+2. I reviewed the event details.
+
+3. I examined:
+
+* Image path
+* Image name
+* Process name
+* Process ID
+* Timestamp
+
+4. I looked for unexpected or unusual image-loading activity that could warrant further investigation.
+
+---
+
+## Project Outcome
+
+After completing the exercises, I was able to:
+
+* Install and verify Sysmon
+* Access Sysmon events through Windows Event Viewer
+* Analyze process creation events using Event ID 1
+* Investigate network connections using Event ID 3
+* Examine file creation activity using Event ID 11
+* Review image/DLL loading using Event ID 7
+* Identify unusual processes, connections, files, and image loads
+* Use Sysmon data as a source for Windows security monitoring and incident investigation
