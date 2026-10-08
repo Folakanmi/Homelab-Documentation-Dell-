@@ -1,0 +1,216 @@
+# Project 2:
+Basic Apache Log Analysis
+
+## Introduction
+
+In this project, I performed basic analysis of Apache web server logs. I generated HTTP traffic, examined access and error logs, filtered events, and summarized web traffic to identify usage patterns and potential security issues.
+
+## Prerequisites
+* Basic understanding of web servers and HTTP
+* Familiarity with the Linux command line
+* Apache2 web server installed
+
+## Lab Setup and Tools
+* Ubuntu Server
+* Apache2
+* Linux terminal
+* Apache log files in `/var/log/apache2/`
+
+---
+
+## Exercise 1: Installing and Verifying Apache
+
+### Expected Output
+I confirmed that Apache2 was installed and running successfully.
+
+### Steps
+1. I checked whether Apache2 was installed:
+
+```bash
+apache2 -v
+```
+
+2. I updated the package repository:
+
+```bash
+sudo apt update
+```
+
+3. I installed Apache2:
+
+```bash
+sudo apt install apache2 -y
+```
+
+4. I verified the Apache service:
+
+```bash
+sudo systemctl status apache2
+```
+
+I confirmed the service was running:
+
+```text
+Active: active (running)
+```
+
+---
+
+## Exercise 2: Accessing Apache Log Files
+
+### Expected Output
+I located the Apache log files and confirmed the presence of the access, error, and virtual-host logs.
+
+### Steps
+1. I navigated to the Apache log directory:
+
+```bash
+cd /var/log/apache2/
+```
+
+2. I listed the available log files:
+
+```bash
+ls -l
+```
+
+Example output:
+
+```text
+-rw-r----- 1 root adm   0 Oct  7 08:46 access.log
+-rw-r----- 1 root adm 281 Oct  7 08:46 error.log
+-rw-r----- 1 root adm   0 Oct  7 08:46 other_vhosts_access.log
+```
+
+---
+
+## Exercise 3: Generating and Viewing Access Logs
+
+### Expected Output
+I generated HTTP traffic and observed the requests being recorded in `access.log`.
+
+### Steps
+1. I viewed the existing access log:
+
+```bash
+less access.log
+```
+
+2. I monitored the log in real time:
+
+```bash
+sudo tail -f /var/log/apache2/access.log
+```
+
+3. From another terminal, I generated an HTTP request:
+
+```bash
+curl http://localhost
+```
+
+Example log entry:
+
+```text
+::1 - - [07/Oct/2026:09:00:19 +0000] "GET / HTTP/1.1" 200 10926 "-" "curl/8.5.0"
+```
+
+4. I also generated HTTP traffic from another computer using the Apache server's IP address:
+
+```text
+http://192.168.1.XX
+```
+
+Example entry:
+
+```text
+192.168.1.XX - - [07/Oct/2026:09:05:09 +0000] "GET / HTTP/1.1" 200 3460 "-" "Mozilla/5.0 ..."
+```
+
+The log entries provided information such as the **source IP address, timestamp, HTTP method, requested URL, status code, response size, and user agent**.
+
+---
+
+## Exercise 4: Filtering Access Log Entries
+
+### Expected Output
+I isolated specific requests based on source IP addresses, HTTP status codes, and combinations of search criteria.
+
+### Steps
+
+1. I filtered requests from a specific IP address:
+
+```bash
+grep '192.168.1.XX' access.log
+```
+
+2. I searched for HTTP `404` errors:
+
+```bash
+grep '404' access.log
+```
+
+3. I combined both filters to identify `404` errors from a specific IP:
+
+```bash
+grep '192.168.1.XX' access.log | grep '404'
+```
+
+---
+
+## Exercise 5: Analyzing Apache Error Logs
+
+### Expected Output
+I reviewed Apache error events and identified issues such as missing files, permission problems, or configuration errors.
+
+### Steps
+
+1. I opened the Apache error log:
+
+```bash
+less /var/log/apache2/error.log
+```
+
+2. I reviewed the recorded error messages and examined their timestamps and descriptions.
+
+---
+
+## Exercise 6: Summarizing Apache Log Data
+
+### Expected Output
+I generated summaries showing the number of requests from each IP address, requests by date, and the most frequently requested URLs.
+
+### Steps
+
+**1. I counted requests from each IP address:**
+
+```bash
+awk '{print $1}' access.log | sort | uniq -c | sort -nr
+```
+
+**2. I summarized requests by date:**
+
+```bash
+awk '{print $4}' access.log | cut -d: -f1 | sort | uniq -c
+```
+
+**3. I identified the most frequently requested URLs:**
+
+```bash
+awk '{print $7}' access.log | sort | uniq -c | sort -nr
+```
+
+---
+
+## Project Outcome
+
+After completing the exercises, I was able to:
+
+* Install and verify Apache2
+* Locate and examine Apache log files
+* Generate HTTP traffic for testing
+* Analyze Apache access and error logs
+* Filter events using `grep`
+* Identify HTTP status codes and source IP addresses
+* Count requests by IP address and date
+* Identify frequently requested URLs
+* Use Apache logs for basic troubleshooting and security monitoring
