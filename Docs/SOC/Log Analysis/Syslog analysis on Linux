@@ -1,0 +1,95 @@
+PROJECT 1
+* Introduction to Syslog Analysis on Linux Systems
+
+* Introduction
+** In this project, I performed basic syslog analysis on a Linux system. I reviewed the rsyslog configuration, accessed system log files, filtered relevant events, analyzed authentication activity, and summarized log data for troubleshooting and security monitoring.
+
+* Prerequisites
+** Basic Linux administration knowledge
+** Familiarity with the Linux command line
+** Ubuntu or another Linux distribution with syslog/rsyslog enabled
+** Lab Setup and Tools
+** Ubuntu 24.04 or later
+** /var/log/ directory
+Linux terminal
+Exercise 1: Reviewing Syslog Configuration
+
+* Expected Output
+I identified the main rsyslog configuration file and reviewed how logging facilities, severity levels, and log destinations are configured.
+
+Steps
+I opened the rsyslog configuration file:
+** sudo nano /etc/rsyslog.conf
+I reviewed the configuration rules.
+I identified the different logging facilities, severity levels, and their corresponding log destinations.
+
+Exercise 2: Accessing Linux Log Files
+* Expected Output
+I displayed the available system log files and viewed entries from the main syslog file.
+
+Steps
+I navigated to the Linux log directory:
+cd /var/log/
+I listed the available log files:
+ls -l
+I opened the main syslog file:
+less syslog
+
+Note: On some Linux distributions, /var/log/syslog may not be available. Ubuntu systems commonly use it when rsyslog is enabled.
+
+Exercise 3: Filtering Syslog Entries
+* Expected Output
+I isolated log entries based on a specific date, service, and a combination of both filters.
+
+Steps
+I searched for log entries from a specific date:
+grep 'Jun 12' /var/log/syslog
+I filtered the logs for SSH-related events:
+grep 'sshd' /var/log/syslog
+I combined the filters to identify SSH events from the selected date:
+grep 'Jun 12' /var/log/syslog | grep 'sshd'
+Exercise 4: Analyzing Authentication Events
+Expected Output
+
+I identified authentication events, including successful logins, failed login attempts, usernames, timestamps, and source IP addresses.
+
+Steps
+I opened the authentication log:
+less /var/log/auth.log
+I reviewed successful authentication events.
+I identified failed login attempts.
+I recorded relevant information, including:
+Date and time
+Username
+Source IP address
+Authentication result
+Service involved
+Exercise 5: Summarizing Log Activity
+Expected Output
+
+I generated summaries showing failed SSH attempts by source IP, successful SSH logins by user, and frequently occurring syslog messages.
+
+Steps
+
+1. I counted failed SSH attempts by source IP:
+
+awk '/sshd/ && /Failed password/ {print $11}' /var/log/auth.log | sort | uniq -c | sort -nr
+
+2. I counted successful SSH logins by username:
+
+awk '/sshd/ && /Accepted password/ {print $9}' /var/log/auth.log | sort | uniq -c | sort -nr
+
+3. I identified frequently occurring syslog message types:
+
+awk '{print $6}' /var/log/syslog | sort | uniq -c | sort -nr
+Project Outcome
+
+After completing the exercises, I was able to:
+
+Review Linux syslog configuration
+Locate and examine system log files
+Filter relevant events using grep
+Analyze authentication activity
+Extract information using awk
+Summarize recurring log events
+Use Linux logs for troubleshooting and basic security monitoring
